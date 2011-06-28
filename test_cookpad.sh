@@ -27,6 +27,8 @@ function render_cookpad {
 
   render $host'/recipe/list/57172?fmt=smt' $output'cookpad_recipe_list.png'
   render $host'/recipe/692226?fmt=smt' $output'cookpad_recipe.png'
+  render $host'/recipe/tsukurepo_list_by_recipe/209435?fmt=smt' $output'cookpad_tsukurepo_list_by_recipe.png'
+
   render $host'/login?fmt=smt' $output'cookpad_login.png'
   render $host'/mobile?fmt=smt' $output'cookpad_mobile.png'
 
@@ -69,6 +71,7 @@ function compare_with_ref {
         if [ $w1 == $w2 -a $h1 == $h2 ]; then
           compare $i "../reference/"$i "tmp/"$i
         else
+          # compare -subimage-search "../reference/"$i $i "tmp/"$i
           echo "-> Different image sizes for "$i
         fi
       fi
