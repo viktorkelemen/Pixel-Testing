@@ -1,38 +1,45 @@
 #!/bin/sh
-#/ Usage: pixeltesting [--createref <optional>]
+#/ Usage: pixeltesting HOST [-c <optional>]
 #/ Pixel testing
 set -e
 
-# test $# -eq 0 -o "$1" = "--help" && {
-#     grep '^#/' <"$0" |
-#     cut -c4-
-#     exit 2
-# }
+test "$1" = "--help" && {
+    grep '^#/' <"$0" |
+    cut -c4-
+    exit 2
+}
 
-HOST="http://cookpad.local.com:3000"
-# HOST="http://cookpad.com"
 OUTPUT="output/"
 
 function render {
-  phantomjs render.js $1 $2 320 1000
+  phantomjs render.js $1 $2 320 10000
 }
+
 
 function render_cookpad {
   host=$1
   output=$2
-  render $host'/?fmt=smt' $output'cookpad_top.png'
-  render $host'/diary/1591399?fmt=smt' $output'cookpad_diary.png'
-  render $host'/diary/list/57172?fmt=smt' $output'cookpad_diary_list.png'
-  render $host'/diary/list/1386727?fmt=smt' $output'cookpad_diary_list_empty.png'
+  render $host'/' $output'top.png'
 
-  render $host'/recipe/list/57172?fmt=smt' $output'cookpad_recipe_list.png'
-  render $host'/recipe/692226?fmt=smt' $output'cookpad_recipe.png'
-  render $host'/recipe/tsukurepo_list_by_recipe/209435?fmt=smt' $output'cookpad_tsukurepo_list_by_recipe.png'
+  render $host'/recipe/hot' $output'hot.png'
 
-  render $host'/login?fmt=smt' $output'cookpad_login.png'
-  render $host'/mobile?fmt=smt' $output'cookpad_mobile.png'
+  render $host'/diary/1591399' $output'diary_top.png'
+  render $host'/diary/list/57172' $output'diary_list.png'
+  render $host'/diary/list/1386727' $output'empty_diary_list.png'
 
-  render $host'/tsukurepo/list/434295?fmt=smt' $output'cookpad_tsukurepo_list.png'
+  render $host'/recipe/692226' $output'recipe.png'
+  render $host'/recipe/list/57172' $output'recipe_list.png'
+
+  render $host'/recipe/tsukurepo_list_by_recipe/209435' $output'tsukurepo_list_by_recipe.png'
+  render $host'/tsukurepo/list/434295' $output'tsukurepo_list.png'
+
+  render $host'/login' $output'login.png'
+  render $host'/user/regist' $output'regist.png'
+  render $host'/mobile' $output'mobile.png'
+  render $host'/terms' $output'terms.png'
+  render $host'/terms/privacy' $output'privacy.png'
+  render $host'/terms/tokutei' $output'tokutei.png'
+  render $host'/terms/ps' $output'ps.png'
 }
 
 
@@ -43,6 +50,7 @@ function create_ref {
     rm -rf reference
   fi
 
+  mkdir reference
   render_cookpad $HOST "reference/"
 }
 
@@ -53,6 +61,7 @@ function compare_with_ref {
     rm -rf output
   fi
 
+  mkdir output
   render_cookpad $HOST "output/"
 
   # mkdir output
@@ -61,7 +70,7 @@ function compare_with_ref {
   mkdir tmp
   for i in *
   do
-      if test -f "$i" 
+      if test -f "$i"
       then
 
         w1=`identify -format "%w" "../reference/"$i`
@@ -97,7 +106,16 @@ function compare_with_ref {
 
 }
 
-if [ "$1" == "--createref" ]; then
+
+if [ -z "$1" ]; then
+  HOST="http://cookpad.com"
+else
+  HOST=$1
+fi
+
+echo "PIXEL TESTING on "$HOST
+
+if [ "$2" == "-c" ]; then
   create_ref
 else
   compare_with_ref

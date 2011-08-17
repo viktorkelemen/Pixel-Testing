@@ -7,8 +7,9 @@ var address = "",
 
 function renderUrlToFile(url, file, callback) {
     var page = new WebPage();
-    page.viewportSize = { width: 320, height : 1000 };
-    page.settings.userAgent = "Phantom.js bot";
+    page.viewportSize = { width: 320 , height: "2000" };
+    // using the Android user agent
+    page.settings.userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
     page.open(url, function(status){
        if ( status !== "success") {
