@@ -1,18 +1,19 @@
 #!/bin/sh
-#/ Usage: pixeltesting HOST [-c <optional>]
+#/ Usage: pixeltesting -h <host> [-c]
 #/ Pixel testing
 set -e
 
-test "$1" = "--help" && {
+test $# -eq 0 && {
     grep '^#/' <"$0" |
     cut -c4-
     exit 2
 }
 
+
 OUTPUT="output/"
 
 function render {
-  phantomjs render.js $1 $2 320 10000
+  phantomjs render.js $1 $2 320 2000
 }
 
 
@@ -51,7 +52,7 @@ function create_ref {
   fi
 
   mkdir reference
-  render_cookpad $HOST "reference/"
+  render_cookpad "$HOST" "reference/"
 }
 
 function compare_with_ref {
@@ -62,7 +63,7 @@ function compare_with_ref {
   fi
 
   mkdir output
-  render_cookpad $HOST "output/"
+  render_cookpad "$HOST" "output/"
 
   # mkdir output
   cd output
@@ -107,15 +108,23 @@ function compare_with_ref {
 }
 
 
-if [ -z "$1" ]; then
-  HOST="http://cookpad.com"
-else
-  HOST=$1
-fi
+MODE="default"
+HOST=""
 
-echo "PIXEL TESTING on "$HOST
+while getopts "h:c" optionName; do
+case "$optionName" in
+h)  HOST=$OPTARG
+    ;;
+c)  MODE="reference"
+    ;;
+*)  grep '^#/' <"$0" |
+    cut -c4-
+    exit 2
+    ;;
+esac
+done
 
-if [ "$2" == "-c" ]; then
+if [ "$MODE" == "reference" ]; then
   create_ref
 else
   compare_with_ref

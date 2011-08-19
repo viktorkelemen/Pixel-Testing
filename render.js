@@ -5,9 +5,9 @@ var address = "",
     w = 0,
     h = 0;
 
-function renderUrlToFile(url, file, callback) {
+function renderUrlToFile(url, file, w, h, callback) {
     var page = new WebPage();
-    page.viewportSize = { width: 320 , height: "2000" };
+    page.viewportSize = { width: w, height: h };
     // using the Android user agent
     page.settings.userAgent = "Mozilla/5.0 (Linux; U; Android 2.2; en-us; Nexus One Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1";
 
@@ -35,7 +35,7 @@ if (phantom.args.length !== 4) {
   w = phantom.args[2];
   h = phantom.args[3];
 
-  renderUrlToFile(address, file, function (url, file) {
+  renderUrlToFile(address, file, w, h, function (url, file) {
     console.log(url + " -> " + file);
     phantom.exit();
   });
