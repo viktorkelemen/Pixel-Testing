@@ -1,6 +1,6 @@
 #!/bin/sh
-#/ Usage: pixeltesting -h <host> [-c]
 #/ Pixel testing
+#/ Usage: pixeltesting -h <host> [-c]
 set -e
 
 test $# -eq 0 && {
