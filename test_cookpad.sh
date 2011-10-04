@@ -1,6 +1,6 @@
 #!/bin/sh
 #/ Pixel testing
-#/ Usage: pixeltesting -h <host> [-c]
+#/ Usage: pixeltesting -c <config file> [-r]
 set -e
 
 test $# -eq 0 && {
@@ -18,68 +18,64 @@ function render {
 
 
 function render_cookpad {
-  host=$1
-  output=$2
-  render $host'/' $output'top.png'
 
-  render $host'/recipe/hot' $output'hot.png'
+  prefix=$1
+  line_num=0
 
-  render $host'/diary/1591399' $output'diary_top.png'
-  render $host'/diary/list/57172' $output'diary_list.png'
-  render $host'/diary/list/1386727' $output'empty_diary_list.png'
+  while read line
+  do
+    line_num=`expr $line_num + 1`
 
-  render $host'/recipe/692226' $output'recipe.png'
-  render $host'/recipe/list/57172' $output'recipe_list.png'
+    if [ $line_num -eq 1 ]; then
+      name=$line
 
-  render $host'/recipe/tsukurepo_list_by_recipe/209435' $output'tsukurepo_list_by_recipe.png'
-  render $host'/tsukurepo/list/434295' $output'tsukurepo_list.png'
+      if [ ! -d $name ]; then
+        mkdir $name
+      fi
 
-  render $host'/login' $output'login.png'
-  render $host'/user/regist' $output'regist.png'
-  render $host'/mobile' $output'mobile.png'
-  render $host'/terms' $output'terms.png'
-  render $host'/terms/privacy' $output'privacy.png'
-  render $host'/terms/tokutei' $output'tokutei.png'
-  render $host'/terms/ps' $output'ps.png'
+      if [ -d $name/$prefix ]; then
+        rm -rf $name/$prefix
+      fi
+      mkdir $name/$prefix
+
+
+    elif [ $line_num -eq 2 ]; then
+      host=$line
+    else
+      filename=`expr $line_num - 2`
+      render $host$line $name/$prefix/$filename'.png'
+    fi
+  done < $CONFIG_FILE
+
 }
 
 
 function create_ref {
   echo "Creating reference"
 
-  if [ -d reference ]; then
-    rm -rf reference
-  fi
-
-  mkdir reference
-  render_cookpad "$HOST" "reference/"
+  render_cookpad "ref"
 }
 
 function compare_with_ref {
   echo "Creating screenshots of Cookpad"
 
-  if [ -d output ]; then
-    rm -rf output
-  fi
-
-  mkdir output
-  render_cookpad "$HOST" "output/"
-
-  # mkdir output
-  cd output
+  render_cookpad "out"
+  read -r name < $CONFIG_FILE
+  cd $name/out
   echo "Comparing"
+  rm -rf tmp
   mkdir tmp
   for i in *
   do
       if test -f "$i"
       then
 
-        w1=`identify -format "%w" "../reference/"$i`
+        w1=`identify -format "%w" "../ref/"$i`
         w2=`identify -format "%w" $i`
-        h1=`identify -format "%h" "../reference/"$i`
+        h1=`identify -format "%h" "../ref/"$i`
         h2=`identify -format "%h" $i`
         if [ $w1 == $w2 -a $h1 == $h2 ]; then
-          compare $i "../reference/"$i "tmp/"$i
+          compare $i "../ref/"$i "tmp/"$i
         else
           # compare -subimage-search "../reference/"$i $i "tmp/"$i
           echo "-> Different image sizes for "$i
@@ -110,12 +106,13 @@ function compare_with_ref {
 
 MODE="default"
 HOST=""
+CONFIG_FILE=""
 
-while getopts "h:c" optionName; do
+while getopts "c:r" optionName; do
 case "$optionName" in
-h)  HOST=$OPTARG
+c)  CONFIG_FILE=$OPTARG
     ;;
-c)  MODE="reference"
+r)  MODE="reference"
     ;;
 *)  grep '^#/' <"$0" |
     cut -c4-
@@ -124,10 +121,10 @@ c)  MODE="reference"
 esac
 done
 
+
 if [ "$MODE" == "reference" ]; then
   create_ref
 else
   compare_with_ref
 fi
-
 
