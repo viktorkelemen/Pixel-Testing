@@ -13,7 +13,7 @@ test $# -eq 0 && {
 OUTPUT="output/"
 
 function render {
-  phantomjs render.js $1 $2 320 2000
+  phantomjs render.js $1 $2 320 2000 "$USER_AGENT"
 }
 
 
@@ -41,8 +41,10 @@ function render_cookpad {
 
     elif [ $line_num -eq 2 ]; then
       host=$line
+    elif [ $line_num -eq 3 ]; then
+      USER_AGENT=$line
     else
-      filename=`expr $line_num - 2`
+      filename=`expr $line_num - 3`
       render $host$line $name/$prefix/$filename'.png'
     fi
   done < $CONFIG_FILE
@@ -107,6 +109,7 @@ function compare_with_ref {
 MODE="default"
 HOST=""
 CONFIG_FILE=""
+USER_AGENT=""
 
 while getopts "c:r" optionName; do
 case "$optionName" in
