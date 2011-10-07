@@ -29,9 +29,11 @@ Usage
 1. Create your onw config file based on *cookpad_live.conf.sample*
 
 2. Create reference screenshots by using the 'r' parameter
+
     ./pixel_testing.sh -c [your config file] -r
 
 3. Create new screenshots and compare them with the references
+
     ./pixel_testing.sh -c [your config file]
 
 
@@ -39,10 +41,10 @@ Config file
 -----------
 
 It has the following structure
-line #1   project name
-line #2   host
-line #3   user agent
-line #4   page URL
-line #5   page URL
-...
+1. line PROJECT NAME
+2. line HOST
+3. line USER AGENT to render the pages
+4. line PAGE URL
+5. line PAGE URL
+..
 
