@@ -41,6 +41,7 @@ Config file
 -----------
 
 It has the following structure
+
 1. line PROJECT NAME
 
 2. line HOST
