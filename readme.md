@@ -16,13 +16,10 @@ For example, you changed the CSS which caused changes on pages you
 don't want to.
 
 
+Dependencies
+------------
 
-
-
-Install
--------
-
-* Pixel testing depends on [PhantomJS](http://www.phantomjs.org/)
+* [PhantomJS](http://www.phantomjs.org/)
 
 * [Imagemagick](http://www.imagemagick.org/script/index.php) command
   line
