@@ -42,9 +42,14 @@ Config file
 
 It has the following structure
 1. line PROJECT NAME
+
 2. line HOST
+
 3. line USER AGENT to render the pages
+
 4. line PAGE URL
+
 5. line PAGE URL
+
 ..
 
