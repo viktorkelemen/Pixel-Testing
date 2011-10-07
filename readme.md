@@ -1,24 +1,29 @@
 Pixel testing
 =============
 
-For testing pixels on the cookpad website.
+Pixel testing websites.
 
-The current version only creates the screenshots, no testing is done yet.
+1. Create a list of page URLs you want to test.
+2. Run the pixel testign script to create reference screenshots for these pages.
+3. Change/tweak/edit these pages and then run pixel testing again, in
+   testing mode.
+4. It will report you which pages have been changed and which parts
+   changed.
+
+This is a great tool to discover not intended changes.
+
+For example, you changed the CSS which caused changes on pages you
+don't want to.
+
+
 
 
 
 Install
 -------
 
-Pixel testing depends on [PhantomJS](http://www.phantomjs.org/)
+* Pixel testing depends on [PhantomJS](http://www.phantomjs.org/)
 
-### Install Phantom JS
+* [Imagemagick](http://www.imagemagick.org/script/index.php) command
+  line
 
-`git clone git://github.com/ariya/phantomjs.git && cd phantomjs`
-
-`qmake -spec macx-g++ && make`
-
-
-### Install Pixel Testing
-
-....
