@@ -36,6 +36,12 @@ Usage
 
     ./pixel_testing.sh -c [your config file]
 
+Example
+-------
+    > cp cookpad_live.conf.sample cookpad_live.conf
+    > ./pixel_testing.sh -c cookpad_live.conf -r
+    > ./pixel_testing.sh -c cookpad_live.conf
+
 
 Config file
 -----------
