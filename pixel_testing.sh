@@ -88,19 +88,20 @@ function compare_with_ref {
   if [ -d tmp ]; then
     echo "Merging"
     cd tmp
-    if [ -e test.png ]; then
-      rm test.png
+    mergedfile=`date "+%Y%m%d%H%M%S"`".png"
+    if [ -e $mergedfile ]; then
+      rm $mergedfile
     fi
 
     for i in *
     do
-      if [ -e "test.png" ]; then
-        montage -geometry +0+0 $i "test.png" "test.png"
+      if [ -e $mergedfile ]; then
+        montage -geometry +0+0 $i $mergedfile $mergedfile
       else
-        montage -geometry +0+0 $i "test.png"
+        montage -geometry +0+0 $i $mergedfile
       fi
     done
-    open test.png
+    open $mergedfile
   fi
 
 }
